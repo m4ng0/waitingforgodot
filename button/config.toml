@@ -3,3 +3,4 @@
   pollInterval = 100
   defaultState = 1
   pressSoundFile = "./ring.wav"
+  command = "/home/pi/callreception.sh"

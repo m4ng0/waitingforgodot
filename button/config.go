@@ -8,6 +8,7 @@ type applicationConfig struct {
 		PollInterval   int
 		DefaultState   int
 		PressSoundFile string
+		Command        string
 	}
 }
 

@@ -8,6 +8,8 @@ import (
 
 	"log"
 
+	"os/exec"
+
 	"time"
 )
 
@@ -24,22 +26,38 @@ func main() {
 	a := audio.NewAdaptor()
 	ring := audio.NewDriver(a, Config.Button.PressSoundFile)
 
-	work := func() {
-		button.On(gpio.ButtonPush, func(data interface{}) {
-			log.Println("ring button pressed")
-			ring.Play()
-		})
+	r.Connect()
+	button.Start()
+	a.Connect()
+	ring.Start()
 
-		button.On(gpio.ButtonRelease, func(data interface{}) {
-			log.Println("ring button released")
-		})
+	buttonEvents := button.Subscribe()
+
+	pressEventChannel := make(chan *gobot.Event, 1) // only one event buffer
+	for {
+		select {
+		case event := <-buttonEvents:
+			log.Println("Event: ", event.Name, event.Data)
+			if event.Name == "push" {
+				log.Println("ring button pressed")
+				select {
+				case pressEventChannel <- event: // put the event in the channel, if it isn't full
+					go func() {
+						defer func() {
+							<-pressEventChannel
+						}()
+						ring.Play()
+						cmd := exec.Command(Config.Button.Command)
+						if err := cmd.Run(); err != nil {
+							log.Println("Could not execute command!")
+						}
+					}()
+				default:
+					log.Println("Channel full, discarding press event")
+				}
+			} else if event.Name == "release" {
+				log.Println("ring button released")
+			}
+		}
 	}
-
-	robot := gobot.NewRobot("Godot Robot",
-		[]gobot.Connection{r, a},
-		[]gobot.Device{button, ring},
-		work,
-	)
-
-	robot.Start()
 }
