@@ -1,0 +1,5 @@
+[button]
+  pin = "7"
+  pollInterval = 100
+  defaultState = 1
+  pressSoundFile = "./ring.wav"
