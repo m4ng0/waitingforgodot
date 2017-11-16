@@ -1,0 +1,10 @@
+[Unit]
+Description=Transgredior service (godot)
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/transgredior
+
+[Install]
+WantedBy=multi-user.target

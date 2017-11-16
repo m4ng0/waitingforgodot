@@ -1,0 +1,10 @@
+[Unit]
+Description=Waiting for godot
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/godot
+
+[Install]
+WantedBy=multi-user.target
