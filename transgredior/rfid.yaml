@@ -1,0 +1,9 @@
+rfid:
+  command:
+    accessGranted: /home/pi/aperito
+  sound:
+    accessGranted: access_granted.wav
+    accessDenied: access_denied.wav
+  access:
+    - key: key1
+    - key: key2
