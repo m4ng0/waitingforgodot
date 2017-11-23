@@ -24,7 +24,7 @@ func main() {
 		log.Fatal(err)
 		return
 	}
-	readerChan, err := rfid.NewReaderChan(reader)
+	readerChan, err := rfid.NewReaderChan(reader, 100*time.Millisecond)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -66,8 +66,8 @@ func main() {
 					log.Printf("Got id %s: someone is trying to do something nasty?", id)
 					deniedSound.Play()
 				}
-				log.Println("Ready for next")
 				time.Sleep(1000 * time.Millisecond)
+				log.Println("Ready for next")
 			}()
 		default:
 			log.Println("Channel full, verification discarded")
